@@ -1,0 +1,30 @@
+services:
+  # Phase 1: one-shot bulk data fetch
+  # Run: docker compose run --rm fetch
+  # Resume: docker compose run --rm fetch --resume (default)
+  # Full re-fetch: docker compose run --rm fetch --no-resume
+  fetch:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - /root/reports/vn_training_data:/data
+    environment:
+      DATA_DIR: /data
+      FETCH_DELAY_SEC: "1.0"
+      MIN_BARS: "60"
+      VNSTOCK_SOURCE: VCI
+    command: ["--exchange", "HOSE", "HNX"]
+
+  # Phase 2: training (placeholder — fill in when Chronos deps added)
+  # train:
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile.train
+  #   volumes:
+  #     - /root/reports/vn_training_data:/data
+  #     - /root/reports/vn_chronos_model:/model
+  #   environment:
+  #     DATA_DIR: /data
+  #     MODEL_DIR: /model
+  #     TRAIN_STEPS: "50000"

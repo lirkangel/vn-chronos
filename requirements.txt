@@ -1,0 +1,12 @@
+# Phase 1 — data fetching
+vnstock==4.0.2
+pandas==2.2.3
+tqdm==4.67.3
+requests==2.33.1
+
+# Phase 2 — training (uncomment when ready)
+# torch==2.4.0
+# git+https://github.com/amazon-science/chronos-forecasting.git
+# transformers==4.44.0
+# accelerate==0.34.0
+# datasets==3.0.0
