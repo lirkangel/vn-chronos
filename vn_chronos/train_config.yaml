@@ -1,0 +1,52 @@
+# Chronos-T5-Small — train from scratch on VN equity daily OHLCV
+# Run via:  python -m vn_chronos.train --config vn_chronos/train_config.yaml
+
+# Data
+training_data_paths:
+  - "/root/reports/vn_chronos_train/train.arrow"
+probability: null        # uniform sampling across all series
+
+# Chronos model (T5-small from scratch — NOT loading pre-trained weights)
+model_id: "google/t5-efficient-small"
+model_type: "seq2seq"
+
+tokenizer_class: "MeanScaleUniformBins"
+tokenizer_kwargs:
+  low: -1.0
+  high: 1.0
+  num_bins: 4096
+n_tokens: 4096
+n_special_tokens: 2
+pad_token_id: 0
+eos_token_id: 1
+use_eos_token: true
+
+# Forecast horizon and context
+prediction_length: 5       # 1 trading week ahead
+context_length: 512        # ~2 years lookback max
+min_past: 60               # drop samples with fewer than 60 context bars
+
+# Training loop
+max_steps: 50000
+save_steps: 5000
+log_steps: 200
+per_device_train_batch_size: 32
+learning_rate: 0.001
+optim: "adamw_torch"
+warmup_ratio: 0.0
+gradient_accumulation_steps: 1
+gradient_checkpointing: false  # set true to trade speed for RAM if OOM
+
+# Output
+output_dir: "/root/reports/vn_chronos_model"
+
+# CPU-specific — disable GPU options
+tf32: false
+torch_compile: false
+dataloader_num_workers: 2
+
+# Sampling config (used at inference time)
+num_samples: 20
+temperature: 1.0
+top_k: 50
+top_p: 1.0

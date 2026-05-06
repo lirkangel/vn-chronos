@@ -1,0 +1,16 @@
+# Training image — extends kronos base (already has torch 2.11.0+cpu)
+FROM kronos:latest
+
+WORKDIR /app
+
+# Install chronos-forecasting with training extras + arrow support
+RUN pip install --no-cache-dir \
+    "chronos-forecasting[training]" \
+    pyarrow==20.0.0 \
+    pyyaml==6.0.2
+
+# Copy project
+COPY vn_chronos/ ./vn_chronos/
+
+ENV PYTHONUNBUFFERED=1
+ENV OMP_NUM_THREADS=2
